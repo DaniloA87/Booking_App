@@ -1,0 +1,25 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" controllerName="com.sap.build.standard.roomBooking.controller.Page1" xmlns="sap.m" xmlns:unified="sap.ui.unified">
+    <Page showHeader="true" title="Temp" showFooter="false" showNavButton="false">
+        <content>
+            <PlanningCalendar id="idCal" width="auto" height="50%" noDataText="No data" singleSelection="true" appointmentsVisualization="Filled" appointmentsReducedHeight="false" showRowHeaders="true" showWeekNumbers="true" showDayNamesLine="true" visible="true" showIntervalHeaders="false">
+                <toolbarContent>
+                    <Title text="Title" titleStyle="H4" width="auto" textAlign="Begin" visible="true" wrapping="false"/>
+                    <Button text="Aggiungi prenotazione" press='onAdd' icon="sap-icon://add" />
+                </toolbarContent>
+                <rows>
+                    <PlanningCalendarRow title="Sala Riunioni" text="test" icon="sap-icon://meeting-room" appointments="{/BookingsSet}" selected="true">
+                        <appointments>
+                            <unified:CalendarAppointment  title="{name}" text="{title}"  startDate="{start}" endDate="{end}" type="{type}" selected="false" tentative="false"/>
+                           
+                           
+                        </appointments>
+                    </PlanningCalendarRow>
+                </rows>
+            </PlanningCalendar>
+        </content>
+        <footer/>
+        <headerContent/>
+        <subHeader/>
+        <customHeader/>
+    </Page>
+</mvc:View>
