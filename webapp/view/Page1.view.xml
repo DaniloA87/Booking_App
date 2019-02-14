@@ -1,22 +1,88 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" controllerName="com.sap.build.standard.roomBooking.controller.Page1" xmlns="sap.m" xmlns:unified="sap.ui.unified">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" controllerName="com.sap.build.standard.roomBooking.controller.Page1" xmlns="sap.m" xmlns:f="sap.ui.layout.form"
+xmlns:unified="sap.ui.unified" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
     <Page showHeader="true" title="Temp" showFooter="false" showNavButton="false">
-        <content>
-            <PlanningCalendar id="idCal" width="auto" height="50%" noDataText="No data" singleSelection="true" appointmentsVisualization="Filled" appointmentsReducedHeight="false" showRowHeaders="true" showWeekNumbers="true" showDayNamesLine="true" visible="true" showIntervalHeaders="false">
+        <content id="idCon">
+            <PlanningCalendar id="idCal" appointmentSelect="onAppPress" width="auto" height="50%" noDataText="No data" singleSelection="true" appointmentsVisualization="Filled" appointmentsReducedHeight="false" showRowHeaders="true" showWeekNumbers="true" showDayNamesLine="true" visible="true" showIntervalHeaders="false">
                 <toolbarContent>
                     <Title text="Title" titleStyle="H4" width="auto" textAlign="Begin" visible="true" wrapping="false"/>
                     <Button text="Aggiungi prenotazione" press='onAdd' icon="sap-icon://add" />
                 </toolbarContent>
                 <rows>
-                    <PlanningCalendarRow title="Sala Riunioni" text="test" icon="sap-icon://meeting-room" appointments="{/BookingsSet}" selected="true">
+                    <PlanningCalendarRow title="Sala Riunioni" text="test" icon="sap-icon://meeting-room" appointments="{/BookingsSet}" id="idPlan" selected="true">
                         <appointments>
-                            <unified:CalendarAppointment  title="{name}" text="{title}"  startDate="{start}" endDate="{end}" type="{type}" selected="false" tentative="false"/>
+                            <unified:CalendarAppointment  title="{name}" startDate="{start}" endDate="{end}" selected="false" tentative="false"/>
                            
                            
                         </appointments>
                     </PlanningCalendarRow>
                 </rows>
             </PlanningCalendar>
+        
+        	<VBox class="sapUiSmallMargin">
+	    	<f:Form id="idFormCont"
+			editable="false">
+			<f:title>
+				<core:Title text="Dettagli" />
+			</f:title>
+			<f:layout>
+				<f:ResponsiveGridLayout
+					labelSpanXL="3"
+					labelSpanL="3"
+					labelSpanM="3"
+					labelSpanS="12"
+					adjustLabelSpan="false"
+					emptySpanXL="1"
+					emptySpanL="1"
+					emptySpanM="1"
+					emptySpanS="0"
+		        	columnsXL="2"
+					columnsL="2"
+					columnsM="2"
+					singleContainerFullSize="false" />
+			</f:layout>
+			<f:formContainers >
+				<f:FormContainer>
+					<f:formElements>
+						<f:FormElement label="Nome">
+							<f:fields>
+								<Input value="{name}" id="idName"/>
+							</f:fields>
+						</f:FormElement>
+						<f:FormElement label="Titolo">
+							<f:fields>
+								<Input value="{title}" id="idTitle" />
+								
+							</f:fields>
+						</f:FormElement>
+						<f:FormElement label="Inizio / Fine">
+							<f:fields>
+								<DateTimePicker id="idStart" value="{start}"  />
+								<!--<DateTimePicker id="idEnd" value="{end}"  />-->
+							</f:fields>
+						</f:FormElement>
+						<f:FormElement label="Informazioni">
+							<f:fields>
+							<Input value="{info}" id="idInfo"/>
+							
+							
+							</f:fields>
+						</f:FormElement>
+							<f:FormElement >
+							<f:fields>
+							<Button id="idButt" text="Modifica" press="onModify"/>
+							
+
+							
+							</f:fields>
+						</f:FormElement>
+					</f:formElements>
+				</f:FormContainer>
+			</f:formContainers>
+		</f:Form>
+	</VBox>
+     
         </content>
+        
         <footer/>
         <headerContent/>
         <subHeader/>

@@ -116,34 +116,14 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				oData = {},
 				self = this;
 		    var oCal = oView.byId("idCal");
-		    oCal.setStartDate(new Date());       
-			var oModel = new sap.ui.model.json.JSONModel();
-			oView.setModel(oModel, "staticDataModel");
-			self.oBindingParameters = {};
+		    oCal.setStartDate(new Date());  
+		    var oModel = this.getOwnerComponent().getModel();
+		    oView.setModel(oModel); 
+		    var oForm = oView.byId("idFormCont");
+		    oForm.setVisible(false);
+		    oView.byId("idStart").formatOptions = 'UTC:true'; 
+		    
 
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132"] = {};
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132"]["startDate"] = new Date("2018-07-01T07:00:00.000Z");
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132-rows-sap_m_PlanningCalendarRow-1-appointments-sap_ui_unified_CalendarAppointment-1"] = {};
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132-rows-sap_m_PlanningCalendarRow-1-appointments-sap_ui_unified_CalendarAppointment-1"]["startDate"] = new Date("2018-07-01T08:30:00.000Z");
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132-rows-sap_m_PlanningCalendarRow-1-appointments-sap_ui_unified_CalendarAppointment-1"]["endDate"] = new Date("2018-07-01T10:30:00.000Z");
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132-rows-sap_m_PlanningCalendarRow-1-appointments-sap_ui_unified_CalendarAppointment-2"] = {};
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132-rows-sap_m_PlanningCalendarRow-1-appointments-sap_ui_unified_CalendarAppointment-2"]["startDate"] = new Date("2018-07-01T07:00:00.000Z");
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132-rows-sap_m_PlanningCalendarRow-1-appointments-sap_ui_unified_CalendarAppointment-2"]["endDate"] = new Date("2018-07-01T09:30:00.000Z");
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132-rows-sap_m_PlanningCalendarRow-1-appointments-sap_ui_unified_CalendarAppointment-3"] = {};
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132-rows-sap_m_PlanningCalendarRow-1-appointments-sap_ui_unified_CalendarAppointment-3"]["startDate"] = new Date("2018-07-01T11:00:00.000Z");
-
-			oData["sap_Responsive_Page_0-content-sap_m_PlanningCalendar-1549533620132-rows-sap_m_PlanningCalendarRow-1-appointments-sap_ui_unified_CalendarAppointment-3"]["endDate"] = new Date("2018-07-01T13:30:00.000Z");
-
-			oView.getModel("staticDataModel").setData(oData, true);
 
 			function dateDimensionFormatter(oDimensionValue, sTextValue) {
 				var oValueToFormat = sTextValue !== undefined ? sTextValue : oDimensionValue;
@@ -218,7 +198,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 
                   
 
-                   id: 'idStart' 
+                   id: 'idStart2' 
 
                     }),
                      new sap.m.Label({text:'Orario di fine'}),
@@ -227,7 +207,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 
                   
 
-                   id: 'idEnd' 
+                   id: 'idEnd2' 
 
                     })
                     
@@ -251,14 +231,15 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 
              var Title = sap.ui.getCore().byId('idTitle').getValue();
 
-             var Start = sap.ui.getCore().byId('idStart').getDateValue();
+             var Start = sap.ui.getCore().byId('idStart2').getDateValue();
              
-             var End = sap.ui.getCore().byId('idEnd').getDateValue();
+             var End = sap.ui.getCore().byId('idEnd2').getDateValue();
              
              var Info = sap.ui.getCore().byId('idInfo').getValue();
              
              var oEntry = {};
              oEntry.name = Name;
+             oEntry.title = Title;
              oEntry.start = Start;
              oEntry.end = End;
              oEntry.info = Info;
@@ -273,6 +254,43 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
    	sap.m.MessageBox.show(msg);
    	
    },
+   onAppPress: function(oEvent) {
+   	
+   var oBindingContext = oEvent.getParameter("appointment").getBindingContext();
+   var oForm = this.getView().byId("idFormCont");
+   oForm.setBindingContext(oBindingContext);
+   var oTitleField = this.getView().byId("idTitle");
+   var oNameField = this.getView().byId("idName");
+   var oStartField = this.getView().byId("idStart");
+   var oEndField = this.getView().byId("idEnd");
+   var oInfoField = this.getView().byId("idInfo");
+   oTitleField.setEditable(false);
+   oNameField.setEditable(false);
+   oStartField.setEditable(false);
+   oEndField.setEditable(false);
+   oInfoField.setEditable(false);
+   oStartField.setDisplayFormat("dd-MM-yyyy");
+   oForm.setVisible(true);
+   
+
+   
+   	
+   },
+   onModify: function(oEvent) {
+   	var oTitleField = this.getView().byId("idTitle");
+   var oNameField = this.getView().byId("idName");
+   var oStartField = this.getView().byId("idStart");
+   var oEndField = this.getView().byId("idEnd");
+   var oInfoField = this.getView().byId("idInfo");
+   oTitleField.setEditable(true);
+   oNameField.setEditable(true);
+   oStartField.setEditable(true);
+   oEndField.setEditable(true);
+   oInfoField.setEditable(true);
+   var oButton = this.getView().byId("idButt");
+   oButton.setProperty("text","Salva");
+   	
+   },
    onCancel: function(oEvent) {  
 		
 		sap.ui.getCore().byId('Dialog').close();
@@ -283,4 +301,5 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
              sap.ui.getCore().byId('Dialog').open();
 		},
 	});
+	
 }, /* bExport= */ true);
