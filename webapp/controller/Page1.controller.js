@@ -68,6 +68,9 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			});
 
 		},
+		test: function(sDate){
+		return new Date(sDate);	
+		},
 		updateBindingOptions: function(sCollectionId, oBindingData, sSourceId) {
 			this.mBindingOptions = this.mBindingOptions || {};
 			this.mBindingOptions[sCollectionId] = this.mBindingOptions[sCollectionId] || {};
@@ -121,7 +124,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		    oView.setModel(oModel); 
 		    var oForm = oView.byId("idFormCont");
 		    oForm.setVisible(false);
-		    oView.byId("idStart").formatOptions = 'UTC:true'; 
+		    
 		    
 
 
@@ -225,17 +228,36 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				oView = this.getView();
 
 		},
-			onSave: function(oEvent) {
+		strRandom: function(oEvent) {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 10; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+   },
+			onSave: function(oEvent,oListener) {
 		     var that = this;
-		     var Name = sap.ui.getCore().byId('idName').getValue();
+		     var oView = this.oView;
+		     
+/*		     var oDTP = oView.byId('idStart');
+		     
+		     oDTP._oDisplayFormatDate.oFormatOptions.UTC = true;
+		     
+		     oDTP._oDisplayFormatDate.oFormatOptions.style = "short";*/
+		     
+		     var Name = oView.byId('idName').getValue();
 
-             var Title = sap.ui.getCore().byId('idTitle').getValue();
+             var Title = oView.byId('idTitle').getValue();
 
-             var Start = sap.ui.getCore().byId('idStart2').getDateValue();
+             var Start = oView.byId('idStart').getDateValue();
              
-             var End = sap.ui.getCore().byId('idEnd2').getDateValue();
+             var End = oView.byId('idEnd').getDateValue();
              
-             var Info = sap.ui.getCore().byId('idInfo').getValue();
+             var Info = oView.byId('idInfo').getValue();
+             
+             
              
              var oEntry = {};
              oEntry.name = Name;
@@ -243,8 +265,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
              oEntry.start = Start;
              oEntry.end = End;
              oEntry.info = Info;
-             
-             var oModel = this.getView().getModel();
+             oEntry.token = this.strRandom();
+             var oModel = oView.getModel();
              oModel.create('/BookingsSet',oEntry,{success:this.onCreateOk()});
 			},
 	onCreateOk: function(oEvent) {
@@ -264,17 +286,39 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
    var oStartField = this.getView().byId("idStart");
    var oEndField = this.getView().byId("idEnd");
    var oInfoField = this.getView().byId("idInfo");
+   var oButt = this.getView().byId("idButt");
+      var oDelBut = this.getView().byId("idDelB");
+   oDelBut.setVisible(true);
    oTitleField.setEditable(false);
    oNameField.setEditable(false);
    oStartField.setEditable(false);
    oEndField.setEditable(false);
    oInfoField.setEditable(false);
-   oStartField.setDisplayFormat("dd-MM-yyyy");
+   //oStartField.setDisplayFormat("dd-MM-yyyy");
+   oButt.setText('Modifica orario');
+   oButt.mEventRegistry = {};
+   oButt.attachPress(this.onModify,this);
    oForm.setVisible(true);
    
 
    
    	
+   },
+   onDelete: function(oEvent) {
+   var oForm = this.getView().byId("idFormCont");
+   
+   var oBindingContext = oForm.getBindingContext();
+   var sBindingContext = oBindingContext.toString();
+   
+     var oModel = this.getView().getModel();
+   oModel.remove(sBindingContext,{success:this.onDeleteOk()});
+   	
+   },
+   onDeleteOk: function(oEvent) {
+   	   	var msg = 'Prenotazione eliminata';
+   	var oDialog = sap.ui.getCore().byId('Dialog');
+   	oDialog.close();
+   	sap.m.MessageBox.show(msg);
    },
    onModify: function(oEvent) {
    	var oTitleField = this.getView().byId("idTitle");
@@ -282,24 +326,80 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
    var oStartField = this.getView().byId("idStart");
    var oEndField = this.getView().byId("idEnd");
    var oInfoField = this.getView().byId("idInfo");
+   oTitleField.setEditable(false);
+   oNameField.setEditable(false);
+   oStartField.setEditable(true);
+   oEndField.setEditable(true);
+   oInfoField.setEditable(false);
+   var oButton = this.getView().byId("idButt");
+     var oDelBut = this.getView().byId("idDelB");
+   oDelBut.setVisible(true);
+   oButton.setProperty("text","Salva");
+   oButton.mEventRegistry = {};
+   oButton.attachPress(this.onApplyMod,this);
+   
+   },
+   onCancel: function(oEvent) {  
+		
+		sap.ui.getCore().byId('Dialog').close();
+	},
+	onApplyMod: function(oEvent) {
+		
+   
+   var oTitleField = this.getView().byId("idTitle");
+   var oNameField = this.getView().byId("idName");
+   var oStartField = this.getView().byId("idStart");
+   var oEndField = this.getView().byId("idEnd");
+   var oInfoField = this.getView().byId("idInfo");
+   var oForm = this.getView().byId("idFormCont");
+   
+   var oBindingContext = oForm.getBindingContext();
+   var sBindingContext = oBindingContext.toString();
+   var oEntry = {};
+   oEntry.name = oNameField.getValue();
+   oEntry.title = oTitleField.getValue();
+   oEntry.start = oStartField.getDateValue();
+   oEntry.end = oEndField.getDateValue();
+   oEntry.info = oInfoField.getValue();
+   
+   var oModel = this.getView().getModel();
+   oModel.update(sBindingContext,oEntry,{success:this.onModifyOk()});
+		
+	 
+	 	
+	},
+	onModifyOk: function(oEvent) {
+			   	var msg = 'Modifica accettata';
+   	var oDialog = sap.ui.getCore().byId('Dialog');
+   	oDialog.close();
+   	sap.m.MessageBox.show(msg);
+	}, 
+	onAdd: function(oEvent) {
+	var that = this;
+
+             //sap.ui.getCore().byId('Dialog').open();
+   var oTitleField = this.getView().byId("idTitle");
+   var oNameField = this.getView().byId("idName");
+   var oStartField = this.getView().byId("idStart");
+   var oEndField = this.getView().byId("idEnd");
+   var oInfoField = this.getView().byId("idInfo");
+   var oForm = this.getView().byId("idFormCont");
+   oForm.setBindingContext();
    oTitleField.setEditable(true);
    oNameField.setEditable(true);
    oStartField.setEditable(true);
    oEndField.setEditable(true);
    oInfoField.setEditable(true);
    var oButton = this.getView().byId("idButt");
-   oButton.setProperty("text","Salva");
-   	
-   },
-   onCancel: function(oEvent) {  
-		
-		sap.ui.getCore().byId('Dialog').close();
-	},
-			onAdd: function(oEvent) {
-			var that = this;
-
-             sap.ui.getCore().byId('Dialog').open();
-		},
+   var oDelBut = this.getView().byId("idDelB");
+   oDelBut.setVisible(false);
+   oButton.setProperty("text","Aggiungi");
+   oButton.mEventRegistry = {};
+   oButton.attachPress(this.onSave,this);
+   oForm.setVisible(true);
+   
+             
+		}
 	});
 	
 }, /* bExport= */ true);

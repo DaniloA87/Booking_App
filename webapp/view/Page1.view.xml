@@ -10,7 +10,7 @@ xmlns:unified="sap.ui.unified" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
                 <rows>
                     <PlanningCalendarRow title="Sala Riunioni" text="test" icon="sap-icon://meeting-room" appointments="{/BookingsSet}" id="idPlan" selected="true">
                         <appointments>
-                            <unified:CalendarAppointment  title="{name}" startDate="{start}" endDate="{end}" selected="false" tentative="false"/>
+                            <unified:CalendarAppointment  title="{name}" startDate="{path:'start', UTC:true}" endDate="{path:'end', UTC:true }" selected="false" tentative="false"/>
                            
                            
                         </appointments>
@@ -38,14 +38,18 @@ xmlns:unified="sap.ui.unified" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
 		        	columnsXL="2"
 					columnsL="2"
 					columnsM="2"
-					singleContainerFullSize="false" />
+					singleContainerFullSize="true" />
 			</f:layout>
 			<f:formContainers >
 				<f:FormContainer>
 					<f:formElements>
-						<f:FormElement label="Nome">
+						<f:FormElement label="Azienda">
 							<f:fields>
-								<Input value="{name}" id="idName"/>
+									<ComboBox id='idName'>
+				<core:Item key="1" text="Cyrius" />
+				<core:Item key="2" text="BSP" />
+				<core:Item key="3" text="Arneis" />
+		               	</ComboBox>
 							</f:fields>
 						</f:FormElement>
 						<f:FormElement label="Titolo">
@@ -55,21 +59,27 @@ xmlns:unified="sap.ui.unified" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
 							</f:fields>
 						</f:FormElement>
 						<f:FormElement label="Inizio / Fine">
+						<f:fields>
+								<DateTimePicker id="idStart" value=" { path:'start' , type: 'sap.ui.model.type.DateTime',
+								formatOptions: {style:'short' , strictParsing:true } }" />
+								</f:fields>
 							<f:fields>
-								<DateTimePicker id="idStart" value="{start}"  />
-								<!--<DateTimePicker id="idEnd" value="{end}"  />-->
+								<DateTimePicker id="idEnd"  value=" { path:'end' , type: 'sap.ui.model.type.DateTime', 
+								formatOptions: {style:'short' , strictParsing:true } }" />
 							</f:fields>
 						</f:FormElement>
-						<f:FormElement label="Informazioni">
+						<f:FormElement label="Prenotato da:">
 							<f:fields>
 							<Input value="{info}" id="idInfo"/>
 							
 							
 							</f:fields>
 						</f:FormElement>
-							<f:FormElement >
+							<f:FormElement  >
 							<f:fields>
+							<Button id="idDelB" text="Elimina" press="onDelete"/>
 							<Button id="idButt" text="Modifica" press="onModify"/>
+							
 							
 
 							
