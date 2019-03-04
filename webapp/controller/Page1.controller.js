@@ -339,6 +339,20 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
    oButton.attachPress(this.onApplyMod,this);
    
    },
+   handleAppointmentDrop: function(oEvent) {
+   	
+   	
+   var oBindingContext = oEvent.getParameter("appointment").getBindingContext();
+   var sBindingContext = oBindingContext.toString();
+   var oEntry = {};
+   oEntry.start = oEvent.getParameter("startDate");
+   oEntry.end = oEvent.getParameter("endDate");
+   
+   var oModel = this.getView().getModel();
+   oModel.update(sBindingContext,oEntry,{success:this.onModifyOk()});
+   	
+   	
+   },
    onCancel: function(oEvent) {  
 		
 		sap.ui.getCore().byId('Dialog').close();
@@ -373,6 +387,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
    	var oDialog = sap.ui.getCore().byId('Dialog');
    	oDialog.close();
    	sap.m.MessageBox.show(msg);
+   	
 	}, 
 	onAdd: function(oEvent) {
 	var that = this;

@@ -2,13 +2,21 @@
 xmlns:unified="sap.ui.unified" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
     <Page showHeader="true" title="Temp" showFooter="false" showNavButton="false">
         <content id="idCon">
-            <PlanningCalendar id="idCal" appointmentSelect="onAppPress" width="auto" height="50%" noDataText="No data" singleSelection="true" appointmentsVisualization="Filled" appointmentsReducedHeight="false" showRowHeaders="true" showWeekNumbers="true" showDayNamesLine="true" visible="true" showIntervalHeaders="false">
+            <PlanningCalendar id="idCal" appointmentSelect="onAppPress" width="auto" height="50%" noDataText="No data"
+            singleSelection="true" appointmentsVisualization="Filled" 
+            appointmentsReducedHeight="false" showRowHeaders="true" showWeekNumbers="true" 
+            showDayNamesLine="true" visible="true" showIntervalHeaders="false">
                 <toolbarContent>
                     <Title text="Title" titleStyle="H4" width="auto" textAlign="Begin" visible="true" wrapping="false"/>
                     <Button text="Aggiungi prenotazione" press='onAdd' icon="sap-icon://add" />
                 </toolbarContent>
                 <rows>
-                    <PlanningCalendarRow title="Sala Riunioni" text="test" icon="sap-icon://meeting-room" appointments="{/BookingsSet}" id="idPlan" selected="true">
+                    <PlanningCalendarRow title="Sala Riunioni" text="test" 
+                    icon="sap-icon://meeting-room" enableAppointmentsDragAndDrop="true"
+                    enableAppointmentsResize="true"
+                    appointmentResize="handleAppointmentDrop"
+                    appointmentDrop="handleAppointmentDrop"
+                    appointments="{/BookingsSet}" id="idPlan" selected="true">
                         <appointments>
                             <unified:CalendarAppointment  title="{name}" startDate="{path:'start', UTC:true}" endDate="{path:'end', UTC:true }" selected="false" tentative="false"/>
                            
